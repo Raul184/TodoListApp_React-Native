@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View ,TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View ,TouchableOpacity,FlatList} from 'react-native';
 import {AntDesign} from '@expo/vector-icons';
 import colors from './shared/Colors';
+import tempData from './tempData';
+import TodoItem from './components/TodoItem'
 
 export default class App extends Component {
   render() {
@@ -19,6 +21,15 @@ export default class App extends Component {
             <AntDesign name="plus" size={16} color={colors.blue} />
           </TouchableOpacity>
           <Text style={styles.add}>Add list</Text>
+        </View>
+        <View style={{height:275,paddingLeft:32}}>
+          <FlatList 
+            data={tempData} 
+            keyExtractor={item => item.name}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item}) =><TodoItem item={item} />}
+          />
         </View>
       </View>
     )
@@ -43,19 +54,19 @@ const styles = StyleSheet.create({
     fontSize:38,
     fontWeight:'800',
     color: colors.black,
-    paddingHorizontal:64
+    paddingHorizontal:30
   },
   addList:{
-    borderWidth:2,
+    borderWidth:1,
     borderColor:colors.lightBlue,
-    borderRadius:4,
+    borderRadius:6,
     padding:16,
     alignItems:"center",
     justifyContent:"center"    
   },
   add:{
     color: colors.blue,
-    fontWeight:"600",
+    fontWeight:'bold',
     fontSize:14,
     marginTop:8
   }
