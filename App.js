@@ -13,6 +13,9 @@ export default class App extends Component {
   toggleAddTodo(){
     this.setState({add: !this.state.add})
   }
+  renderItem(item){
+    return <TodoItem item={item} />
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -42,7 +45,7 @@ export default class App extends Component {
             keyExtractor={item => item.name}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
-            renderItem={({item}) =><TodoItem item={item} />}
+            renderItem={({item}) => this.renderItem(item)}
           />
         </View>
       </View>
