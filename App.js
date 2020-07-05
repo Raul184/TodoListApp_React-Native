@@ -5,7 +5,6 @@ import colors from './shared/Colors';
 import tempData from './tempData';
 import TodoItem from './components/TodoItem'
 import AddTodoModal from './components/AddTodoModal'
-const { uuid } = require('uuidv4')
 export default class App extends Component {
   state = {
     add:false,
@@ -60,6 +59,7 @@ export default class App extends Component {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             renderItem={({item}) => this.renderFlatListItems(item)}
+            keyboardShouldPersistTaps='always'
           />
         </View>
       </View>

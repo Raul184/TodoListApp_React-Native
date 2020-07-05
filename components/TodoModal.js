@@ -7,22 +7,29 @@ import {
   Text,
   FlatList,
   KeyboardAvoidingView,
-  TextInput
+  TextInput,
+  Keyboard
 } from 'react-native';
 import colors from '../shared/Colors';
 import {AntDesign,Ionicons} from '@expo/vector-icons';
 
 const TodoModal = ({item,closeModal,updateTodo}) => {
   const { name,color,todos } = item;
-  const [nueTodo, setTodo] = useState('')
-
   const done = todos.filter(el => el.completed).length
   
+  const [nueTodoTask, setNueTodoTask] = useState('')
+
   const toogleTodoComplete = index => {
     let todo = item
     todo.todos[index].completed = !todo.todos[index].completed
-    
     updateTodo(todo) 
+  }
+  const addNueTaskToTodo = nueTodoTask => {
+    let todo = item
+    todo.todos.push({title:nueTodoTask, completed:false})
+    updateTodo(todo)
+    setNueTodoTask('')
+    Keyboard.dismiss()
   }
   const renderTodo = (todo,index) => {
     let colored = todo.completed ? colors.green: colors.red
@@ -31,7 +38,7 @@ const TodoModal = ({item,closeModal,updateTodo}) => {
         <TouchableOpacity onPress={() => toogleTodoComplete(index)}>
           <Ionicons 
             name={todo.completed ? 'ios-square':'ios-square-outline'} 
-            size={24} 
+            size={28} 
             color={colored} 
             style={{width:32}}
           />
@@ -57,7 +64,7 @@ const TodoModal = ({item,closeModal,updateTodo}) => {
           style={styles.touchable}
           onPress={closeModal}
         >
-          <AntDesign name='caretleft' size={30} color={colors.black}/>
+          <AntDesign name='close' size={30} color={colors.black}/>
         </TouchableOpacity>
 
         <View style={[
@@ -82,8 +89,15 @@ const TodoModal = ({item,closeModal,updateTodo}) => {
           /> 
         </View>
         <View style={[styles.section, styles.footer]}>
-          <TextInput style={[styles.input,{borderColor:color}]}/>
-          <TouchableOpacity style={[styles.addTodo,{backgroundColor:color}]}>
+          <TextInput 
+            style={[styles.input,{borderColor:color}]}
+            onChangeText={text => setNueTodoTask(text)}
+            value={nueTodoTask}
+          />
+          <TouchableOpacity 
+            style={[styles.addTodo,{backgroundColor:color}]}
+            onPress={() => addNueTaskToTodo()}
+          >  
             <AntDesign name='plus' size={16} color={colors.white}/>
           </TouchableOpacity>
         </View>
