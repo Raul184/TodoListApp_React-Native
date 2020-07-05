@@ -24,9 +24,9 @@ const TodoModal = ({item,closeModal,updateTodo}) => {
     todo.todos[index].completed = !todo.todos[index].completed
     updateTodo(todo) 
   }
-  const addNueTaskToTodo = nueTodoTask => {
+  const addNueTaskToTodo = () => {
     let todo = item
-    todo.todos.push({title:nueTodoTask, completed:false})
+    todo.todos = [ ...todo.todos , {title:nueTodoTask, completed:false}]
     updateTodo(todo)
     setNueTodoTask('')
     Keyboard.dismiss()
@@ -83,7 +83,7 @@ const TodoModal = ({item,closeModal,updateTodo}) => {
           <FlatList 
             data={todos}
             renderItem={({item,index}) => renderTodo(item,index)}
-            keyExtractor={item => item.title}
+            keyExtractor={(_,index) => index.toString()}
             contentContainerStyle={{paddingVertical:24}}
             showsVerticalScrollIndicator={false}
           /> 

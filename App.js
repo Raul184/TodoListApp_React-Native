@@ -1,35 +1,57 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View ,TouchableOpacity,FlatList,Modal} from 'react-native';
+import { StyleSheet, Text, View ,TouchableOpacity,FlatList,Modal,ActivityIndicator} from 'react-native';
 import {AntDesign} from '@expo/vector-icons';
 import colors from './shared/Colors';
-import tempData from './tempData';
 import TodoItem from './components/TodoItem'
 import AddTodoModal from './components/AddTodoModal'
+import Fireb from './Fireb'
 export default class App extends Component {
   state = {
     add:false,
-    list: tempData
+    lists: [],
+    user: {},
+    loading: true
   }
-  toggleTodoModal(){
-    this.setState({add: !this.state.add})
-  }
-  renderFlatListItems(item){
-    return <TodoItem item={item} updateTodo={this.updateTodo}/>
-  }
-  addTodo = todo => {
-    this.setState({
-      ...this.state,
-      list: [...this.state.list , {id: this.state.list.length + 1, ...todo , todos:[] }] 
+  componentDidMount(){
+    firebase = new Fireb((error,user) => {
+      if(error){
+        return alert('Ups, something went wrong')
+      }
+      firebase.getLists(lists => {
+        this.setState({lists, user }, () => {
+          this.setState({ loading: false })
+        })
+      })
+      this.setState({user})
     })
   }
-  updateTodo = todo => {
-    this.setState({
-      ...this.state,
-      list: this.state.list.map(el => el.id === todo.id ? todo : el)
-    })
+  componentWillUnmount(){
+    Fireb.detach();
   }
-
+  toggleTodoModal = () => this.setState(
+    {add: !this.state.add}
+  )
+  renderFlatListItems = item => <TodoItem 
+    item={item} 
+    updateTodo={this.updateTodo}
+  />
+  addTodo = todo => this.setState({
+      lists: [
+        ...this.state.lists , 
+        {id: this.state.lists.length + 1, ...todo , todos:[] }
+      ] 
+    }
+  )
+  updateTodo = todo => this.setState({
+      lists: this.state.lists.map(el => el.id === todo.id ? todo : el)
+    }
+  )
   render() {
+    if(this.state.loading){
+      return <View style={styles.container}>
+        <ActivityIndicator size='large' color={colors.blue}/>
+      </View>
+    }
     return (
       <View style={styles.container}>
         <Modal 
@@ -39,6 +61,9 @@ export default class App extends Component {
         >
           <AddTodoModal closeModal={() => this.toggleTodoModal()} addTodo={this.addTodo}/>
         </Modal>
+        <View>
+          <Text>User:{this.state.user.uid}</Text>
+        </View>
         <View style={{flexDirection:"row"}}>
           <View style={styles.divider}/>
           <Text style={styles.title}>
@@ -55,7 +80,7 @@ export default class App extends Component {
         <View style={{height:275,paddingLeft:32}}>
           <FlatList 
             data={this.state.list} 
-            keyExtractor={item => item.name}
+            keyExtractor={item => item.id.toString()}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             renderItem={({item}) => this.renderFlatListItems(item)}

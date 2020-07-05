@@ -3,7 +3,6 @@ import {View,Text,StyleSheet,KeyboardAvoidingView,TouchableOpacity,TextInput} fr
 import {AntDesign} from '@expo/vector-icons'
 import colors from '../shared/Colors'
 import PropTypes from 'prop-types'
-import tempData from '../tempData'
 
 const AddTodoModal = ({closeModal, backgroundColors,addTodo}) => {
   const [data, setData] = useState({
