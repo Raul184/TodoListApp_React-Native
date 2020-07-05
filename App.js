@@ -5,26 +5,40 @@ import colors from './shared/Colors';
 import tempData from './tempData';
 import TodoItem from './components/TodoItem'
 import AddTodoModal from './components/AddTodoModal'
-
+const { uuid } = require('uuidv4')
 export default class App extends Component {
   state = {
-    add:false
+    add:false,
+    list: tempData
   }
-  toggleAddTodo(){
+  toggleTodoModal(){
     this.setState({add: !this.state.add})
   }
-  renderItem(item){
-    return <TodoItem item={item} />
+  renderFlatListItems(item){
+    return <TodoItem item={item} updateTodo={this.updateTodo}/>
   }
+  addTodo = todo => {
+    this.setState({
+      ...this.state,
+      list: [...this.state.list , {id: this.state.list.length + 1, ...todo , todos:[] }] 
+    })
+  }
+  updateTodo = todo => {
+    this.setState({
+      ...this.state,
+      list: this.state.list.map(el => el.id === todo.id ? todo : el)
+    })
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Modal 
           animationType='slide'
           visible={this.state.add}
-          onRequestClose={() => this.toggleAddTodo()}
+          onRequestClose={() => this.toggleTodoModal()}
         >
-          <AddTodoModal closeModal={() => this.toggleAddTodo()} />
+          <AddTodoModal closeModal={() => this.toggleTodoModal()} addTodo={this.addTodo}/>
         </Modal>
         <View style={{flexDirection:"row"}}>
           <View style={styles.divider}/>
@@ -34,18 +48,18 @@ export default class App extends Component {
           <View style={styles.divider}/>
         </View>
         <View style={{marginVertical:48}}>
-          <TouchableOpacity style={styles.addList} onPress={() => this.toggleAddTodo()}>
+          <TouchableOpacity style={styles.addList} onPress={() => this.toggleTodoModal()}>
             <AntDesign name="plus" size={16} color={colors.blue} />
           </TouchableOpacity>
           <Text style={styles.add}>Add list</Text>
         </View>
         <View style={{height:275,paddingLeft:32}}>
           <FlatList 
-            data={tempData} 
+            data={this.state.list} 
             keyExtractor={item => item.name}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
-            renderItem={({item}) => this.renderItem(item)}
+            renderItem={({item}) => this.renderFlatListItems(item)}
           />
         </View>
       </View>

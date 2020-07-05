@@ -5,14 +5,15 @@ import colors from '../shared/Colors'
 import PropTypes from 'prop-types'
 import tempData from '../tempData'
 
-const AddTodoModal = ({closeModal, backgroundColors}) => {
+const AddTodoModal = ({closeModal, backgroundColors,addTodo}) => {
   const [data, setData] = useState({
     name: '',
     color: backgroundColors[0]
   })
   const createTodo = () => {
     const{ name,color } = data;
-    tempData.push({name, color, todos:[]})
+    const list = {name,color};
+    addTodo(list)
     setData({ ...data, name:''})
     closeModal()
   };

@@ -4,7 +4,7 @@ import colors from '../shared/Colors'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import TodoModal from './TodoModal';
 
-const TodoItem = ({item}) => {
+const TodoItem = ({item,updateTodo}) => {
   const [listVisible, setListVisible] = useState(false)
   const completed = item.todos.filter(el => el.completed).length
   return (
@@ -14,7 +14,11 @@ const TodoItem = ({item}) => {
         visible={listVisible}
         onRequestClose={() => setListVisible(!listVisible)}
       >
-        <TodoModal item={item} closeModal={() => setListVisible(!listVisible)}/>
+        <TodoModal 
+          item={item} 
+          closeModal={() => setListVisible(!listVisible)}
+          updateTodo={updateTodo}
+        />
       </Modal>
       <TouchableOpacity 
         style={[
