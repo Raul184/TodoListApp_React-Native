@@ -1,6 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import 'firebase/auth';
+
 const firebaseConfig = {
   apiKey: "AIzaSyDCkTCjm5O3FV143y_ulG90Ij1MZBSedJc",
   authDomain: "todolist-c0a6c.firebaseapp.com",
